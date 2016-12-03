@@ -1,15 +1,12 @@
 package info.duanye.dusdk;
 
 import java.io.File;
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
+import org.chromium.ui.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +26,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 import android.os.SystemClock;
 
 public class BDLocPlugin extends CordovaPlugin {
@@ -160,11 +156,22 @@ public class BDLocPlugin extends CordovaPlugin {
 
 		@Override
 		public void onReceiveLocation(BDLocation arg0) {
+			System.out.println("Cordova : " + arg0);
 			System.out.println("Cordova : " + new Gson().toJson(arg0));
-			JSONObject ret = Commons.locToJson(arg0);
-			System.out.println("Cordova : " + ret);
-			callback.success(ret);
-
+			System.out.println("Cordova : " + arg0.getLatitude());
+			try {
+				if(arg0 != null && arg0.getLatitude() != 4.9E-324 && arg0.getLongitude() != 4.9E-324){
+					JSONObject ret = Commons.locToJson(arg0);
+					System.out.println("Cordova : " + ret);
+					callback.success(ret);
+				}else{
+					System.out.println("您尚未授权应用定位权限，请到设置-->权限与隐私中打开定位权限");
+					Toast.makeText(context, "您尚未授权应用定位权限，请到设置-->权限与隐私中打开定位权限", Toast.LENGTH_LONG).show();
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			loccli.unRegisterLocationListener(this);
 		}
 	}

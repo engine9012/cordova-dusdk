@@ -131,7 +131,7 @@ public class BDLocPlugin extends CordovaPlugin {
 		
 		Cursor cur = db.rawQuery("select * from BD_TRACE where TIME > '" + from + "' and TIME < 'to'", new String[] {});
 		JSONArray arr = Commons.cursorToJson(cur);
-		System.out.println("Cordova : BackgroundTrace between :" + from + " and " + to);
+//		System.out.println("Cordova : BackgroundTrace between :" + from + " and " + to);
 		cur.close();
 		return arr;
 	}
@@ -156,17 +156,18 @@ public class BDLocPlugin extends CordovaPlugin {
 
 		@Override
 		public void onReceiveLocation(BDLocation arg0) {
-			System.out.println("Cordova : " + arg0);
-			System.out.println("Cordova : " + new Gson().toJson(arg0));
-			System.out.println("Cordova : " + arg0.getLatitude());
+//			System.out.println("Cordova : " + arg0);
+//			System.out.println("Cordova : " + new Gson().toJson(arg0));
+//			System.out.println("Cordova : " + arg0.getLatitude());
 			try {
 				if(arg0 != null && arg0.getLatitude() != 4.9E-324 && arg0.getLongitude() != 4.9E-324){
 					JSONObject ret = Commons.locToJson(arg0);
-					System.out.println("Cordova : " + ret);
+//					System.out.println("Cordova : " + ret);
 					callback.success(ret);
 				}else{
-					System.out.println("您尚未授权应用定位权限，请到设置-->权限与隐私中打开定位权限");
+//					System.out.println("您尚未授权应用定位权限，请到设置-->权限与隐私中打开定位权限");
 					Toast.makeText(context, "您尚未授权应用定位权限，请到设置-->权限与隐私中打开定位权限", Toast.LENGTH_LONG).show();
+					callback.success("noroot");
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
